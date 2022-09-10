@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Super-Draft",
+    "slug": "Super-Draft",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "Super-Draft"
+}
