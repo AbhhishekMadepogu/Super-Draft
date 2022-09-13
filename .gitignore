@@ -1,7 +1,8 @@
 # OSX
 #
 .DS_Store
-
+#apikey
+.env
 # Xcode
 #
 build/
