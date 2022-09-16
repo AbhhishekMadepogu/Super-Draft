@@ -2,9 +2,21 @@ import { View, Text, Pressable } from "react-native";
 import React from "react";
 import SafeAreaView from "react-native-safe-area-view";
 import { FlatList } from "react-native-gesture-handler";
-import { Button } from "react-native-web";
 export default function Players({ route }) {
   const players = route.params.players;
+  //Implementing debounce to handle multiple presses to minimize the API Call
+  const play = debounce(() => {
+    console.log("Button Presseed");
+  });
+  function debounce(cb, delay = 500) {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        cb(...args);
+      }, delay);
+    };
+  }
   return (
     <SafeAreaView>
       <FlatList
@@ -18,14 +30,19 @@ export default function Players({ route }) {
               marginVertical: 2,
             }}
           >
-            <Text>
+            <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
               {item.firstName} {item.lastName}
             </Text>
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "95%",
+                marginLeft: 10,
+              }}
             >
               <Text>Pos: {item.position}</Text>
-              <Text>Team: {item.team}</Text>
+              <Text style={{ fontWeight: "bold" }}>Team: {item.team}</Text>
             </View>
           </View>
         )}
@@ -41,7 +58,9 @@ export default function Players({ route }) {
           position: "absolute",
           marginTop: 500,
           height: 35,
+          paddingVertical: 4,
         }}
+        onPress={() => play()}
       >
         <Text style={{ color: "#fff", fontSize: 25 }}>Play</Text>
       </Pressable>

@@ -1,42 +1,41 @@
+//Saved the apikey,contestid in @env and also added to gitignore
 import { BASE_URL, Sd_api_key, contest_id } from "@env";
 import React, { useEffect, useState } from "react";
-import { Text, Alert, FlatList, Pressable } from "react-native";
+import {
+  Text,
+  Alert,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import axios from "axios";
-import { fetchContests } from "../../api/helper";
 import SafeAreaView from "react-native-safe-area-view";
+import { fetchContests1 } from "../../api/helper";
 export default function Home({ navigation }) {
+  const [loading, setLoading] = useState(true);
   const [contests, setContests] = useState([]);
   //using useEffect hook to execute only once
+  const getallContests = async () => {
+    await console.log(fetchContests1());
+  };
   useEffect(() => {
-    fetchContests();
-    console.log("mykey", BASE_URL, Sd_api_key, contest_id);
+    getallContests();
   }, []);
-  const url =
-    "https://api-candidates.staging.superdraft.io/api/lineups/v1/contests/186066/lineups";
-  //   const fetchContests = async () => {
-  //     try {
-  //       await axios
-  //         .get(url, {
-  //           //The API Key can be hidden by implementing .env
-  //           headers: { "SD-api-key": "1C4EB281-6FF9-4AF8-A192-7B1407654166" },
-  //         })
-  //         .then((res) => {
-  //           //console.log(res);
-  //           setContests(res.data);
-  //         });
-  //     } catch (err) {
-  //       Alert.alert(err.response);
-  //     }
-  //   };
-
   return (
     <SafeAreaView>
+      {loading && (
+        <ActivityIndicator
+          size={"large"}
+          animating={loading}
+        ></ActivityIndicator>
+      )}
       <FlatList
         showsVerticalScrollIndicator={false}
         data={contests}
         renderItem={({ item }) => (
           <Pressable
             onPress={() => {
+              //Navigation to navigate to players screen with a payload
               navigation.navigate("Players", { players: item.players });
             }}
             style={{

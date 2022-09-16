@@ -1,10 +1,12 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { FlatList } from "react-native";
+import React, { useEffect } from "react";
+import SafeAreaView from "react-native-safe-area-view";
 
 export default function Contests() {
+  useEffect(() => {}, []);
   return (
-    <View>
-      <Text>Contests</Text>
-    </View>
+    <SafeAreaView>
+      <FlatList></FlatList>
+    </SafeAreaView>
   );
 }
