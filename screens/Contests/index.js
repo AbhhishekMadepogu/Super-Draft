@@ -5,7 +5,7 @@ import SafeAreaView from "react-native-safe-area-view";
 export default function Contests() {
   useEffect(() => {}, []);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: "#FFF", height: "100%" }}>
       <FlatList></FlatList>
     </SafeAreaView>
   );
