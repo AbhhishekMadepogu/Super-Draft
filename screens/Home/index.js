@@ -16,6 +16,7 @@ export default function Home({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [contests, setContests] = useState([]);
   const [players, setPlayers] = useState([]);
+  const [scores, setScores] = useState(false);
   const windowHeight = Dimensions.get("window").height;
   //using useEffect hook to execute only once
 
@@ -28,6 +29,7 @@ export default function Home({ navigation }) {
     fetchScored();
   });
   const score = () => {
+    setLoading(true);
     //mapping the lineups with the player object with the scores and finding the element playerid and matching with the sores
     try {
       contests.map((contest) =>
@@ -44,6 +46,8 @@ export default function Home({ navigation }) {
           }
         })
       );
+      setLoading(false);
+      setScores(true);
     } catch (err) {
       console.log(err);
     }
