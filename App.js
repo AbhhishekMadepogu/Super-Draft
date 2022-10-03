@@ -30,7 +30,11 @@ export default function App() {
             ),
           })}
         />
-        <Stack.Screen name="Players" component={Players} />
+        <Stack.Screen
+          name="Players"
+          component={Players}
+          options={({ route }) => ({ title: route.params.name })}
+        />
         <Stack.Screen name="Contests" component={Contests} />
       </Stack.Navigator>
     </NavigationContainer>

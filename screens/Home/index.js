@@ -1,7 +1,15 @@
 //Saved the apikey,contestid in @env and also added to gitignore
 import React, { useEffect, useState } from "react";
-import { Text, FlatList, Pressable, ActivityIndicator } from "react-native";
+import {
+  Text,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+  Dimensions,
+} from "react-native";
+import { StatusBar } from "expo-status-bar";
 import SafeAreaView from "react-native-safe-area-view";
+import { styles } from "./styles";
 import { instance } from "../../helpers/axiosInterceptor";
 import { contest_id } from "@env";
 export default function Home({ navigation }) {
@@ -9,6 +17,7 @@ export default function Home({ navigation }) {
   const [contests, setContests] = useState([]);
   const [players, setPlayers] = useState([]);
   const [scores, setScores] = useState(false);
+  const windowHeight = Dimensions.get("window").height;
   //using useEffect hook to execute only once
 
   useEffect(() => {
@@ -19,7 +28,8 @@ export default function Home({ navigation }) {
   const play = debounce(() => {
     fetchScored();
   });
-  const score = debounce(() => {
+  const score = () => {
+    console.log("Hello");
     setLoading(true);
     //mapping the lineups with the player object with the scores and finding the element playerid and matching with the sores
     try {
@@ -42,9 +52,9 @@ export default function Home({ navigation }) {
     } catch (err) {
       console.log(err);
     }
-  });
+  };
   //debounce function to handle multiple presses in the button
-  function debounce(cb, delay = 5000) {
+  function debounce(cb, delay = 1000) {
     let timeout;
     return (...args) => {
       clearTimeout(timeout);
@@ -57,7 +67,7 @@ export default function Home({ navigation }) {
   const fetchScored = async () => {
     try {
       await instance
-        .put(
+        .post(
           `/api/lineups/v1/contests/${contest_id.slice(
             1,
             -2
@@ -100,8 +110,10 @@ export default function Home({ navigation }) {
       console.log(err);
     }
   }
+
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff" }}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
       {loading && (
         <ActivityIndicator
           size={"large"}
@@ -115,60 +127,35 @@ export default function Home({ navigation }) {
           <Pressable
             onPress={() => {
               //Navigation to navigate to players screen with a payload
-              navigation.navigate("Players", { players: item.players });
+              navigation.navigate("Players", {
+                players: item.players,
+                name: item.username,
+              });
             }}
-            style={{
-              borderColor: "#5E5E5E",
-              borderBottomWidth: 0.5,
-              height: 35,
-              borderBottomColor: "#5E5E5E",
-              width: "95%",
-              marginVertical: 3,
-              justifyContent: "space-between",
-              alignSelf: "center",
-              flexDirection: "row",
-            }}
+            style={styles.lineup}
           >
-            <Text style={{ fontSize: 15, fontWeight: "bold" }}>
-              {item.username}
-            </Text>
-            <Text>{item.points.toFixed(2)}</Text>
+            <Text style={styles.txtLineup}>{item.username}</Text>
+            <Text style={styles.txtScore}>{item.points.toFixed(2)}</Text>
           </Pressable>
         )}
       ></FlatList>
       {/* if the scores are assigned then show play button else show the Fetch Score Button */}
       {!scores ? (
         <Pressable
-          style={{
-            justifyContent: "center",
-            alignSelf: "center",
-            alignItems: "center",
-            backgroundColor: "#5E5E5E",
-            borderRadius: 30,
-            width: "85%",
-            position: "absolute",
-            marginTop: 500,
-            zIndex: 30,
-            height: 35,
-          }}
+          style={[
+            styles.btnFetchScores,
+            { backgroundColor: "#5E5E5E", top: windowHeight - 140 },
+          ]}
           onPress={() => score()}
         >
           <Text style={{ color: "#fff", fontSize: 20 }}>Fetch Scores</Text>
         </Pressable>
       ) : (
         <Pressable
-          style={{
-            justifyContent: "center",
-            alignSelf: "center",
-            alignItems: "center",
-            backgroundColor: "#2db83d",
-            borderRadius: 30,
-            width: "85%",
-            position: "absolute",
-            marginTop: 500,
-            zIndex: 30,
-            height: 35,
-          }}
+          style={[
+            styles.btnFetchScores,
+            { backgroundColor: "#2db83d", top: windowHeight - 140 },
+          ]}
           onPress={() => play()}
         >
           <Text style={{ color: "#fff", fontSize: 20 }}>Play</Text>
